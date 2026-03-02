@@ -17,3 +17,34 @@ A comparison study of quantification tools showed RSEM to be the best quantifier
 Finally, an evaluation of RNA-seq differential analysis methods showed that DESeq2 performs best when the sample size is six or higher per group, offering the best balance of FDR control, power, and stability (Li et al., 2022).
 
 This is optimal for our data structure, as we have nine different samples, and these methods can provide strong statistical results.
+# Methods
+
+## Data Acquisition
+
+The dataset used for this analysis was obtained from the NCBI database under BioProject accession PRJNA592304. It consisted of nine samples in SRR file format representing the three stages of biofilm development (Early, Thin, and Mature biofilm). SRR files were converted to FASTQ files using SRA Toolkit Release 3.3.0 (The Sequence Read Archive (SRA), n.d.). The reference genome and annotation for *Saccharomyces cerevisiae* were obtained from the NCBI FTP website in FASTA and GTF format.
+
+## Quality Control
+
+Quality control checks were performed using FastQC v0.12.1 for each individual FASTQ file and were viewed collectively using MultiQC v1.33 (Babraham Bioinformatics - FastQC A Quality Control Tool for High Throughput Sequence Data, n.d.; Ewels et al., 2016).
+
+## Alignment
+
+Alignment was performed using STAR v2.7.11b and involved two steps. The first step was generating the genome index using `--runMode genomeGenerate`. The second step involved aligning reads, with the key option being `--quantMode TranscriptomeSAM` to produce BAM files aligned to the transcriptome (Dobin et al., 2013).
+
+## Quantification
+
+Quantification was performed using RSEM v1.3.3 by preparing the reference with the `rsem-prepare-reference` command using the reference FASTA and GTF files. This reference was then supplied to the `rsem-calculate-expression` command to quantify gene counts for the aligned files, using the `--bam` option to specify input. This produced gene-level and isoform-level count files (Li & Dewey, 2011).
+
+All bash shell scripting code can be found in the [transcriptomics.sh](transcriptomics.sh) script file.
+
+## Differential Analysis
+
+Differential expression analysis was performed using DESeq2 v1.44.0 in R v4.5.1. Gene count files generated from quantification were imported using tximport v3.21. DESeq2 was used to produce pairwise comparisons among the three stages (Early, Thin, and Mature). The model was also subjected to a Likelihood Ratio Test (LRT) to assess how inclusion of Stage improved model fit (Love et al., 2014).
+
+## Functional Annotation
+
+Functional annotation was performed using the clusterProfiler R package v4.14.3 to conduct Gene Ontology (GO) overrepresentation analysis. The results data frame from the differential analysis LRT was used to identify biological processes significantly associated with Stage and to compute upregulated and downregulated genes (Wu et al., 2021).
+
+## Data Visualization
+
+Data structure and results were visualized using R packages including ggplot2 v4.0.2, pheatmap v1.0.13, and enrichplot v1.31.4 (Bioconductor - Enrichplot, n.d.; “The Grammar of Graphics,” 2005; Kolde, 2025).
