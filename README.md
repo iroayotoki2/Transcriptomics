@@ -8,7 +8,7 @@ In order to properly study how gene expression affects this process, we must use
 
 ## Methods Comparison
 
-A 2021 study carried out by NASA GeneLab shows FastQC as a reliable quality control tool for short-read sequencing data, as it provides information that allows users to assess sample and sequencing quality, including base statistics, per-base sequencing quality, per-sequence quality scores, per-base sequence content, per-base GC content, per-sequence GC content, per-base N content, sequence length distributions, sequence duplication levels, overrepresented sequences, and k-mer content (Overbey et al., 2021).
+A 2021 study carried out by NASA GeneLab shows FastQC as a reliable quality control tool for short-read sequencing data, as it provides information that allows users to assess sample and sequencing quality, including base statistics, per-base sequencing quality, per-sequence quality scores, per-base sequence content, per-base GC content, per-sequence GC content, per-base N content, sequence length distributions, sequence duplication levels, overrepresented sequences, and k-mer content (Overbey et al., 2021). The outputs from this tool can also be combined to produce a multiqc report comapring structure of multple sequence files. 
 
 Another 2024 study showed STAR to be a superior aligner with an accuracy of 90% when compared to other aligners for RNA-Seq data (Coxe et al., 2024).
 
