@@ -144,7 +144,7 @@ ggplot(pca_data, aes(x = PC1, y = PC2, color = Stage)) +
   xlab(paste0("PC1: ", percentVar[1], "% variance")) +
   ylab(paste0("PC2: ", percentVar[2], "% variance")) +
   ggtitle("PCA Plot of Samples") + coord_fixed()
-#Functional Annotation----
+#4. Functional Annotation----
 #Functional Annotations using the likelihood ratio test results 
 #This is to measure genes that the overall stage had an effect on as opposed to pairwise comparisons
 res_df <- as.data.frame(res_lrt)
@@ -188,3 +188,43 @@ ego_df <- as.data.frame(ego_bp)
 dotplot(ego_bp, showCategory = 20, title = "GO Biological Process")
 barplot(ego_bp, showCategory = 15, title = "GO Biological Process")
 emapplot(pairwise_termsim(ego_bp), showCategory = 30)
+
+#5. Calculating genes upregulated and downregulated based on stage dependence using LRT----
+upregulated_genes <- res_df %>%
+  filter(padj < 0.05 & log2FoldChange > 0) %>%
+  pull(ENTREZID) %>%
+  na.omit() %>%
+  unique()
+
+ego_bp_up <- enrichGO(gene = upregulated_genes,
+                      universe = all_genes,
+                      OrgDb = org.Sc.sgd.db,
+                      ont = "BP",
+                      pAdjustMethod = "BH",
+                      pvalueCutoff = 0.05,
+                      qvalueCutoff = 0.05,
+                      readable = F)
+downregulated_genes <- res_df %>%
+  filter(padj < 0.05 & log2FoldChange < 0 ) %>%
+  pull(ENTREZID) %>%
+  na.omit() %>%
+  unique()
+ego_bp_down <- enrichGO(gene = upregulated_genes,
+                        universe = all_genes,
+                        OrgDb = org.Sc.sgd.db,
+                        ont = "BP",
+                        pAdjustMethod = "BH",
+                        pvalueCutoff = 0.05,
+                        qvalueCutoff = 0.05,
+                        readable = F)
+
+#Showing upregulation and downregulation in relation to the reference(early)
+dotplot(ego_bp_up, showCategory = 15, title = "GO BP - Upregulated Genes")
+
+dotplot(ego_bp_down, showCategory = 15, title = "GO BP - Downregulated Genes")
+
+
+barplot(ego_bp_up, showCategory = 15, title = "GO BP - Upregulated Genes")
+
+barplot(ego_bp_down, showCategory = 15, title = "GO BP - Downregulated Genes")
+
