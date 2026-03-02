@@ -51,4 +51,15 @@ Data structure and results were visualized using R packages including ggplot2 v4
 
 
 
-All R Code can be found in the [Deseq R Script](Deseq%20R%20script.R)
+All R Code can be found in the [Deseq R Script](Deseq%20R%20script.R).
+
+## Results
+### Quality Assessment
+Quality assessment of raw sequencing reads was performed using FastQC and summarized with MultiQC. Per-base sequence quality scores across all samples were consistently high, with the majority of bases exhibiting Phred quality scores above 30. Per-sequence quality score distributions were tightly clustered, with the majority of reads falling within high-confidence score ranges. Per-base N content was negligible across all samples. The proportion of ambiguous nucleotides (N) remained near zero across read positions, without position-specific spikes. Collectively, these quality metrics demonstrate that the sequencing data are of high technical quality and suitable for differential gene expression analysis without extensive quality trimming. 
+Reports can be seen at [QC reports]().
+
+### Data Structure  
+ The data structure is well described by the PCA plot that shows that 67% of the variance can be described by the first principal component with the stage groups also distributed  sequentially across this principal component. This infers that the variance is heavily dependent on the stage of the samples and accounts for majority of the variance while the second principal component accounts for 24% of the variance with a spike in the thin biofilm group compared to the other groups the groups are also closely clustered together which infers there is little variance within each sample group
+
+ ![PCA Plot](Figures/PCA%20Plot.jpeg)
+Figure 1: A PCA plot showing PC1 accounting for 67% of variance and PC2 accounting for 24% with the samples grouped by stage into early, thin and mature biofilms. Strong clusters within groups indicate that internal grouping of stage account for majority of the variance. 
