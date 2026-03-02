@@ -1,8 +1,16 @@
+# Load packages
+library(BiocManager)
+library(clusterProfiler)
+library(org.Sc.sgd.db)
+library(enrichplot)
+library(DOSE)
+library(tidyverse)
 library("DESeq2")
 library("tximport")
 library(ggplot2)
 library("apeglm")
 library("ashr")
+library(pheatmap)
 
 #Load metadata
 sampleTable <- read.csv("stage_Metadata.csv",row.names=1)
@@ -87,3 +95,89 @@ makeVolcano <- function(res_df) {
 makeVolcano(Mature_vs_Early_df)
 makeVolcano(Mature_vs_Thin_df)
 makeVolcano(Thin_vs_Early_df)
+
+#Heatmap
+#Using likelihood ratio test results to represent all stages as a time course not just pairwise
+# Remove NA values
+res_lrt <- na.omit(res_lrt)
+
+# Select top 20 genes by p values from non-NA genes
+top_genes <- head(order(res_lrt$padj), 20)
+gene_names <- rownames(res_lrt)[top_genes]
+
+# Extract transformed & normalized counts with a variance stabilizing transformation
+vsd <- vst(dds)
+# Store counts in a matrix for the heatmap
+mat <- assay(vsd)[gene_names, ]
+
+# Add annotation for cell lines and treatment
+annotation_df <- sampleTable[, c("Sample.ID", "Stage")]
+colnames(annotation_df) <- c("Sample ID", "Stage")
+
+# Create heatmap
+pheatmap(mat, 
+         scale = "row",
+         cluster_rows = TRUE,
+         cluster_cols = TRUE,
+         annotation_col = annotation_df,
+         show_rownames = TRUE,
+         show_colnames = FALSE,
+)
+
+#PCA Plot
+
+# Same VST used above for the heatmap
+vsd <- vst(dds)
+
+# Get the coordinates using plotPCA from DESeq2
+pca_data <- plotPCA(vsd, intgroup = c("Stage"), returnData = TRUE)
+
+# Get percent variance explained by the top two principal components
+percentVar <- round(100 * attr(pca_data, "percentVar"))
+
+# GGplot code to display Stage by colour
+ggplot(pca_data, aes(x = PC1, y = PC2, color = Stage)) +
+  geom_point(size = 4) +
+  xlab(paste0("PC1: ", percentVar[1], "% variance")) +
+  ylab(paste0("PC2: ", percentVar[2], "% variance")) +
+  ggtitle("PCA Plot of Samples") + coord_fixed()
+#Functional Annotations using the likelihood ratio test results 
+#This is to measure genes that the overall stage had an effect on as opposed to pairwise comparisons
+res_df <- as.data.frame(res_lrt)
+
+# Convert Ensembl IDs to Entrez IDs
+# Remove version numbers (e.g., .9 from ENSG00000189221.9)
+gene_ids <- rownames(res_df)
+gene_ids_clean <- sub("\\..*", "", gene_ids)
+
+# Map to Entrez IDs
+gene_map <- bitr(gene_ids_clean, 
+                 fromType = "ORF", 
+                 toType = c("ENTREZID", "GENENAME"),
+                 OrgDb = org.Sc.sgd.db)
+# Add the mapping to results
+res_df$ORF <- sub("\\..*", "", rownames(res_df))
+res_df <- merge(res_df, gene_map, by = "ORF", all.x = TRUE)
+
+# Define significant genes
+sig_genes <- res_df %>%
+  filter(padj < 0.05 ) %>%
+  pull(ENTREZID) %>%
+  na.omit() %>%
+  unique()
+
+all_genes <- res_df %>%
+  pull(ENTREZID) %>%
+  na.omit() %>%
+  unique()
+#GO ORA analysis
+ego_bp <- enrichGO(gene = sig_genes,
+                   universe = all_genes,
+                   OrgDb = org.Sc.sgd.db,
+                   ont = "BP",
+                   pAdjustMethod = "BH",
+                   pvalueCutoff = 0.05,
+                   qvalueCutoff = 0.05,
+                   readable = F)
+head(as.data.frame(ego_bp))
+ego_df <- as.data.frame(ego_bp)
