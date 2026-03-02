@@ -75,7 +75,7 @@ The results from Pairwise analysis showed that the greatest changes occured when
 
 Table 1: A Table comparing upregulated vs downregulated values in the differential gene expression across different developmental stages of the Yest biofilm with the greatest change occuring in the Mature vs Early comparison.
 
-In order to further investigate the gene expression, a likelihood ratio test was carried out on the data to see how much stage improves the model. The results from this show that interesting patterns where highly some highly significant genes like YBR117C, YKL164C had a significant increase in expression at the thin biofilm stage and dropped in the mature stage. This is also in support of how the data is structured from the PCA plot in where there is a spike in the thin biofilm in PC2 when compared to the other stage groups. Genes uniquely upregulated in the Thin biofilm stage  suggest stage-specific biological processes associated with biofilm restructuring and metabolic adaptation.
+In order to further investigate the gene expression, a likelihood ratio test was carried out on the data to see how much stage improves the model. The results from this show  interesting patterns where some highly significant genes like YBR117C, YKL164C had a significant increase in expression at the thin biofilm stage and dropped in the mature stage. This is also in support of how the data is structured from the PCA plot in where there is a spike in the thin biofilm in PC2 when compared to the other stage groups. Genes uniquely upregulated in the Thin biofilm stage  suggest stage-specific biological processes associated with biofilm restructuring and metabolic adaptation.
 
 ![Heatmap](Figures/Heatmap.jpeg)
 
