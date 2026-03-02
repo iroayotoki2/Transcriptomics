@@ -37,6 +37,9 @@ resultsNames(dds)
 res_mature_vs_early <- results(dds, name="Stage_Mature.Biofilm_vs_Early.biofilm")
 res_thin_vs_early   <- results(dds, name="Stage_Thin.Biofilm_vs_Early.biofilm")
 res_mature_vs_thin <- results(dds, contrast=c("Stage", "Mature Biofilm", "Thin Biofilm"))
+summary(res_mature_vs_early)
+summary(res_mature_vs_thin)
+summary(res_thin_vs_early)
 
 #Likelihood ratio test to see how much stage improve the model
 dds_lrt <- DESeq(dds, test="LRT", reduced=~1)
