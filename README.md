@@ -43,7 +43,7 @@ Differential expression analysis was performed using DESeq2 v1.44.0 in R v4.5.1.
 
 ## Functional Annotation
 
-Functional annotation was performed using the clusterProfiler R package v4.14.3 to conduct Gene Ontology (GO) overrepresentation analysis. The results data frame from the differential analysis LRT was used to identify biological processes significantly associated with Stage and to compute upregulated and downregulated genes (Wu et al., 2021).
+Functional annotation was performed using the clusterProfiler R package v4.14.3 to conduct Gene Ontology (GO) overrepresentation analysis. The results data frame from the differential analysis LRT was used to identify biological processes significantly associated with Stage and to compute upregulated and downregulated genes. The gene mapping uses ORF and compares to Genename in the Org.Sc.sgd.db database for yeast. (Wu et al., 2021).
 
 ## Data Visualization
 
