@@ -48,3 +48,4 @@ Functional annotation was performed using the clusterProfiler R package v4.14.3 
 ## Data Visualization
 
 Data structure and results were visualized using R packages including ggplot2 v4.0.2, pheatmap v1.0.13, and enrichplot v1.31.4 (Bioconductor - Enrichplot, n.d.; “The Grammar of Graphics,” 2005; Kolde, 2025).
+All R Code can be found in the [Deseq R Script](Deseq%20R%20script.R)
