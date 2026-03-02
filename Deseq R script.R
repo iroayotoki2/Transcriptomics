@@ -11,7 +11,7 @@ library(ggplot2)
 library("apeglm")
 library("ashr")
 library(pheatmap)
-
+#1. Data Acquisition----
 #Load metadata
 sampleTable <- read.csv("stage_Metadata.csv",row.names=1)
 #Assigning file path and names
@@ -25,6 +25,8 @@ dim(txi$counts)
 head(txi$counts)
 #Checking that txi data and metadata have same names
 all.equal(colnames(txi$counts), rownames(sampleTable))
+
+#2. Deseq DGE Analysis----
 #Early biofilm as reference
 levels(factor(sampleTable$Stage))
 #Deseq analysis
@@ -42,6 +44,7 @@ res_lrt <- results(dds_lrt)
 #63% of genes significantly affected by stage 
 summary(res_lrt)
 
+#3. Deseq plots----
 # Shrinkage and plots
 #Shrinkage using lfcshrink
 mature_vs_earlyLFC <- lfcShrink(dds, coef="Stage_Mature.Biofilm_vs_Early.biofilm", type="apeglm")
@@ -110,7 +113,7 @@ vsd <- vst(dds)
 # Store counts in a matrix for the heatmap
 mat <- assay(vsd)[gene_names, ]
 
-# Add annotation for cell lines and treatment
+# Add annotation for Sample ID  and Stage
 annotation_df <- sampleTable[, c("Sample.ID", "Stage")]
 colnames(annotation_df) <- c("Sample ID", "Stage")
 
@@ -141,6 +144,7 @@ ggplot(pca_data, aes(x = PC1, y = PC2, color = Stage)) +
   xlab(paste0("PC1: ", percentVar[1], "% variance")) +
   ylab(paste0("PC2: ", percentVar[2], "% variance")) +
   ggtitle("PCA Plot of Samples") + coord_fixed()
+#Functional Annotation----
 #Functional Annotations using the likelihood ratio test results 
 #This is to measure genes that the overall stage had an effect on as opposed to pairwise comparisons
 res_df <- as.data.frame(res_lrt)
@@ -181,3 +185,6 @@ ego_bp <- enrichGO(gene = sig_genes,
                    readable = F)
 head(as.data.frame(ego_bp))
 ego_df <- as.data.frame(ego_bp)
+dotplot(ego_bp, showCategory = 20, title = "GO Biological Process")
+barplot(ego_bp, showCategory = 15, title = "GO Biological Process")
+emapplot(pairwise_termsim(ego_bp), showCategory = 30)
