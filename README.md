@@ -79,7 +79,7 @@ In order to further investigate the gene expression, a likelihood ratio test was
 
 ![Heatmap](Figures/Heatmap.jpeg)
 
-Figure 2: A heatmap comparing mean expression from 1(orange) to -1(blue) showing most significantly correlated genes in the effect of stage on the model. This shows some unique patterns in some genes where there is a spike between early and thin biofilm stages and a drop at the mature stage and in some other genes there is a progressive decrease across genes from early to mature stages.
+Figure 2: A heatmap comparing mean expression from 1(orange) to -1(blue) showing most significantly correlated genes in the effect of stage on the model. This shows some unique patterns in some genes where there is a spike between early and mature biofilm stages  and in some other genes there is a progressive decrease across genes from early to mature stages.
 The pairing of the sample IDs to their respective SRA Accessions can be found in the [Metadata](Stage_Metadata.csv) file.
 
 ### Functional Annotation
